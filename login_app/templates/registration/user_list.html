@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}User List{% endblock %}
+{% block main %}
+
+<body>
+    <h1>Register Users List</h1>
+    <div class="container">
+        <div class="row">
+            {% for data in users_list %}
+            <div class="col-md-4 my-3">
+                <div class="card bg-dark text-white">
+                    {% if data.profile_image %}
+                    <img class="card-img-top" 
+                         src="{{ data.profile_image.url }}" 
+                         alt="User Profile Image" 
+                         style="width: 348px; height: 250px"/>
+                    {% else %}
+                    <div class="card-img-top d-flex align-items-center justify-content-center" 
+                         style="width: 348px; height: 250px; background-color: #6c757d; color: white;">
+                        <span>No Profile Image</span>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ data.full_name }}</h5>
+                        <p class="card-text">Email: {{ data.email }}</p>
+                        <p class="card-text">Phone: {{ data.phone_number }}</p>
+                        <div class="d-flex justify-content-between">
+                            {% if user.is_authenticated and user.id == data.id %}
+                            <form method="post" action="{% url 'delete_user' data.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Delete User</button>
+                            </form>
+                            <form method="get" action="{% url 'update_user' data.id %}">
+                                <button type="submit" class="btn btn-success">Update User</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endblock main %}
